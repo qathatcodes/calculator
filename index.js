@@ -1,37 +1,44 @@
+const cors = require('cors')
 const express = require('express')
 const z = require('zod')
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 
 function validateInput(req, res, next) {
 
-    const requestBody = z.object({
-        num1: z.number({
+    
+    const num1 = z.number({
             required_error: "Num1 is required",
             invalid_type_error: "Num1 must be a number",
-          }),
-        num2: z.number({
+          })
+    const num2 = z.number({
             required_error: "Num2 is required",
             invalid_type_error: "Num2 must be a number",
-          }),
-        action: z.string({
+          })
+
+    const action = z.string({
             required_error: "Action is required",
             invalid_type_error: "Action must be a string",
           })    
-    })
+    
 
-    const validatedInput = requestBody.safeParse(req.body)
+    console.log(typeof(req.query.num1))
+    const validateNum1 = num1.safeParse(Number(req.query.num1))
+    console.log(validateNum1);
+    const validateNum2 = num2.safeParse(Number(req.query.num2))
+    const validateAction = action.safeParse(req.query.action)
 
-    console.log("Zod validation -- " + validatedInput)
-
-    if(!validatedInput.success){
-        res.json({"msg" : validatedInput["error"]["issues"][0]["message"]})
+    if(!validateNum1.success){
+        res.json({"msg" : validateNum1["error"]["issues"][0]["message"]})
+    }else if(!validateNum2.success){
+        res.json({"msg" : validateNum2["error"]["issues"][0]["message"]})
+    }else if(!validateAction.success){
+        res.json({"msg" : validateAction["error"]["issues"][0]["message"]})
     }else{
         next()
     }
-
-
 }
 
  app.get('/calculate',validateInput, function(req,res){
@@ -40,9 +47,9 @@ function validateInput(req, res, next) {
 
 function calculate(req,res){
     console.log("in calculate")
-    const number1 = req.body["num1"]
-    const number2 = req.body["num2"]
-    const action = req.body["action"]
+    const number1 = Number(req.query.num1)
+    const number2 = Number(req.query.num2)
+    const action = req.query.action
     let result = 0
     switch (action) {
         case "addition":

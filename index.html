@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="input-fields">
+        <span>
+            Number 1 - <input type="text" id="input-num1">
+        </span>
+        <span>
+            Number 2 - <input type="text" id="input-num2">
+        </span>
+        <span>
+            Action - <input type="text" id="action">
+        </span>
+    </div>
+    <div id="button-div">
+        <button type="button" id="button" value="Click to call Service!" onclick="calculate();">Click to call Service!</button>
+    </div>
+    Result - <div id="response-div"></div>
+    
+    <script>
+
+        const options = {
+            method: "GET",
+            headers: {
+                // TO-DO add token authentication
+            }
+        }
+        
+        function calculate(){
+            const num1 = document.getElementById("input-num1").value
+            const num2 = document.getElementById("input-num2").value
+            const action = document.getElementById("action").value
+            console.log("Button clicked!")
+            fetch(`http://localhost:8080/calculate?num1=${num1}&num2=${num2}&action=${action}`,options)
+                .then(function(response){
+                    response.json()
+                    .then(function(result){
+                        document.getElementById("response-div").innerHTML = result["result"]
+                    })
+            })
+        }
+        
+    </script>
+    
+</body>
+</html>
