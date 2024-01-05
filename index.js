@@ -31,11 +31,11 @@ function validateInput(req, res, next) {
     const validateAction = action.safeParse(req.query.action)
 
     if(!validateNum1.success){
-        res.json({"msg" : validateNum1["error"]["issues"][0]["message"]})
+        res.json({"result" : validateNum1["error"]["issues"][0]["message"]})
     }else if(!validateNum2.success){
-        res.json({"msg" : validateNum2["error"]["issues"][0]["message"]})
+        res.json({"result" : validateNum2["error"]["issues"][0]["message"]})
     }else if(!validateAction.success){
-        res.json({"msg" : validateAction["error"]["issues"][0]["message"]})
+        res.json({"result" : validateAction["error"]["issues"][0]["message"]})
     }else{
         next()
     }
@@ -85,7 +85,7 @@ function calculate(req,res){
             break;
                                   
         default:
-            res.json({"msg": "Invalid Action!"})
+            res.json({"result": "Invalid Action!"})
             break;
        }
 }
